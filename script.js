@@ -1,6 +1,7 @@
 let search = document.querySelector("#search")
 let button = document.querySelector("#button")
 let form = document.querySelector("form")
+let conatiner = document.querySelector(".container")
 
 let conatinerLoader = document.querySelector(".loader-container")
 let loader = document.querySelector(".loader")
@@ -16,16 +17,38 @@ async function fetchData() {
         }
     })
     dataFunc(result);
-    firstNameFunc(result);
 }
 
+// function dataFunc(users) {
+//     conatinerLoader.style.display = "none"
+//     loader.classList.remove("true")
+//     users.forEach((elem) => {
+//         let card = `
+//         <div class="card true">
+//             <img src="${elem.image}" alt="">
+//             <div class="card-body">
+//                 <p>First Name: ${elem.firstName}</p>
+//                 <p>Last Name: ${elem.lastName}</p>
+//                 <p>Email: ${elem.email}</p>
+//                 <p>Phone: ${elem.phone}</p>
+//                 <p>City: ${elem.address.city}</p>
+//                 <a href="${elem.domain}" target="_blank"><button> Visit Website</button></a>
+//             </div>
+//     </div>
+//         `
+//         conatiner.innerHTML += card;
+//     })
+// }
+
+
 function dataFunc(users) {
-    conatinerLoader.style.display = "none"
-    loader.classList.remove("true")
-    let conatiner = document.querySelector(".container")
-    users.forEach((elem) => {
-        let card = `
-    <div class="card">
+
+    function intialPrint(users) {
+        conatinerLoader.style.display = "none"
+        loader.classList.remove("true")
+        users.forEach((elem) => {
+            let card = `
+        <div class="card true">
             <img src="${elem.image}" alt="">
             <div class="card-body">
                 <p>First Name: ${elem.firstName}</p>
@@ -37,27 +60,49 @@ function dataFunc(users) {
             </div>
     </div>
         `
-        conatiner.innerHTML += card;
-    })
-
-
-}
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    if (search.value == "") {
-        alert("Enter Value");
-    } else {
-        search.value = "";
+            conatiner.innerHTML += card;
+        })
     }
-})
+    intialPrint(users)
 
+    // Input Function
 
-function firstNameFunc(firstName) {
-    firstName.forEach((elem) => {
-        console.log(elem.firstName);
+    search.addEventListener('input', () => {
+        if (search.value == "") {
+            conatiner.innerHTML = ""
+            // intialPrint(users)
+        } else {
+            // intialPrint()
+            return users.filter((name) => {
+                let text = name.firstName
+                if (text.toLowerCase() == search.value.toLowerCase() || text.toLowerCase().includes(search.value.toLowerCase())) {
+                    return true
+                } else {
+                    return false;
+                }
+            }).map((filterdNames) => {
+
+                let card = `
+                <div class="card true">
+                    <img src="${filterdNames.image}" alt="">
+                    <div class="card-body">
+                        <p>First Name: ${filterdNames.firstName}</p>
+                        <p>Last Name: ${filterdNames.lastName}</p>
+                        <p>Email: ${filterdNames.email}</p>
+                        <p>Phone: ${filterdNames.phone}</p>
+                        <p>City: ${filterdNames.address.city}</p>
+                        <a href="${filterdNames.domain}" target="_blank"><button> Visit Website</button></a>
+                    </div>
+            </div>
+                `
+                conatiner.innerHTML += card;
+            })
+
+        }
+        // intialPrint(users)
 
     })
 }
+
 
 fetchData()
